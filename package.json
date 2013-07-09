@@ -14,6 +14,7 @@
 	"native2ascii":"",
 	"request":"",
 	"uglify-js":"2.3.6",
+	"ycssmin":"~1.0.1",
 	"kmc":""
   },
   "bin": {
