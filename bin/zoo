@@ -1,0 +1,199 @@
+#!/usr/bin/env node
+// for exe
+//     node.exe %~dp0bake %*
+
+// Commander useage: http://nodetoolbox.com/packages/commander
+
+var program = require('commander')
+	spawn = require('child_process').spawn,
+	util = require('util'),
+	path = require('path'),
+	fs = require('fs'),
+	os = require('os');
+
+var exec = require('child_process').exec;
+var prompt = require('prompt');
+
+var config = {
+	'init':      		false,
+	'gruntfile':      	false,
+	'addmojo':			false,
+	'cssembed':			false,
+	'html':				false
+};
+
+program
+	.version('0.0.x')
+	.option('-i, init', '初始化Gruntfile.js，和node_modules')
+	.option('-g, gruntfile', '取Gruntfile.js')
+	.option('-a, addmojo', '初始化node_modules\n')
+
+	.option('-c, --cssembed <cssfilename>', '指定css文件，将其中的img引用编译为内置DataURI格式')
+	.option('-h, --html <htmlfile>','生成HTML模板文件')
+
+	.on('--help',function(){
+		var str = [
+		' _____\n',
+		'/__  /  ____  ____ \n',
+		'  / \/  / __ \\/ __\\\n',
+		' / /__/ /_/ / /_/ /\n',
+		'/____/\\____/\\____/ '].join();
+		console.log(green(str));
+		
+	})
+	.parse(process.argv);
+
+if(program.init){
+	config['init'] = true;
+}
+
+if(program.gruntfile){
+	config['gruntfile'] = true;
+}
+
+if(program.addmojo){
+	config['addmojo'] = true;
+}
+
+if(program.cssembed){
+	config['cssembed'] = program.cssembed;
+}
+
+if(program.html){
+	config['html'] = program.html;
+}
+
+if(!program.init 
+	&& !program.gruntfile 
+	&& !program.addmojo 
+	&& !program.cssembed
+	&& !program.html){
+	error('请指定参数');
+}
+
+var slash = isLinux()?'/':'/';
+
+if(config.init){
+	exec('curl http://jayli.github.io/tinit.sh | sh',printResult);
+	log(yellow('初始化ing...'));
+} else if (config.gruntfile){
+	if(fs.existsSync(process.env.PWD + slash + 'Gruntfile.js')){
+		getGruntfile();
+	} else {
+		exec('curl http://jayli.github.io/Gruntfile.js > Gruntfile.js',printResult);
+	}
+} else if (config.gruntfile){
+	if(fs.existsSync(process.env.PWD + slash + 'Gruntfile.js')){
+		getGruntfile();
+	} else {
+		exec('curl http://jayli.github.io/Gruntfile.js > Gruntfile.js',printResult);
+	}
+} else if (config.addmojo){
+	exec('curl http://jayli.github.io/tinit_module.sh | sh',printResult);
+	log(yellow('模块下载中...'));
+} else if (config.cssembed) {
+	exec('java -jar '+__dirname + slash + 'cssembed.jar -o '+ config.cssembed + ' ' + config.cssembed,printResult);
+	log(yellow('Parsing...'));
+} else if (config.html) {
+	var getTemFile = function(){
+		exec('curl http://jayli.github.io/html5-templete.html > ' + config.html,printResult);
+	};
+	if(fs.existsSync(process.env.PWD + slash + config.html)){
+		ask('是否覆盖'+config.html+'? (yes)、no',getTemFile);
+	} else {
+		getTemFile();
+	}
+} else {
+	// bake(config);
+}
+
+function getGruntfile(){
+	prompt.start();
+	prompt.get([{
+		properties:{
+			overwrite:{
+				message:'是否覆盖Gruntfile.js? (yes)、no'
+			}
+		}
+	}], function (err, result) {
+		if(result.overwrite == '' || result.overwrite == 'yes'){
+			exec('curl http://jayli.github.io/Gruntfile.js > Gruntfile.js',printResult);
+		} else {
+			die();
+		}
+	});
+}
+
+function ask(msg,callback){
+	prompt.start();
+	prompt.get([{
+		properties:{
+			overwrite:{
+				message:msg
+			}
+		}
+	}], function (err, result) {
+		if(result.overwrite == '' || result.overwrite == 'yes'){
+			callback();
+		} else {
+
+		}
+	});
+}
+
+function error(msg){
+	log(red('ERROR >> ') + msg);
+	die(green('HELP >>\t')+'zoo --help\n');
+}
+
+function log(){
+	console.log.apply(this,arguments)
+}
+
+function die(){
+	console.log.apply(this,arguments)
+	process.exit();
+}
+
+function consoleColor(str,num){
+	if (!num) {
+		num = '32';
+	}
+	return "\033[" + num +"m" + str + "\033[0m"
+}
+
+function green(str){
+	return consoleColor(str,32);
+}
+
+function yellow(str){
+	return consoleColor(str,33);
+}
+
+function red(str){
+	return consoleColor(str,31);
+}
+
+function blue(str){
+	return consoleColor(str,34);
+}
+
+function isLinux(){
+	if(/win/i.test(os.type())){
+		return false;
+	}else{
+		return true;
+	}
+}
+
+function printResult(error,stdout,stderr){
+	if(stdout != '' ){
+		log(green('STDOUT >>') +' \n' + stdout);
+	}
+	if(stderr != ''){
+		log(yellow('STDERR >> ') + stderr);
+	}
+	if (error !== null) {
+		console.log(red('EXECERR >> ')+ error);
+	}
+}

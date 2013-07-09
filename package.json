@@ -1,0 +1,48 @@
+{
+  "name": "zoo",
+  "version": "0.0.8",
+  "description": "Taobao Build Tools",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "commander": "1.1.1",
+    "prompt": "",
+	"iconv-lite":"~0.2.5",
+	"is-utf8":"~0.2.0",
+	"native2ascii":"",
+	"request":"",
+	"uglify-js":"2.3.6",
+	"kmc":""
+  },
+  "bin": {
+    "zoo": "bin/zoo",
+    "cssembed": "bin/cssembed.jar"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jayli/zoo"
+  },
+  "keywords": [
+    "zoo",
+    "build",
+    "package",
+    "taobao",
+    "f2e"
+  ],
+  "author": {
+    "name": "bachi"
+  },
+  "email": "bachi@taobao.com",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "_from": "zoo@",
+  "devDependencies": {},
+  "readme": "test\n",
+  "_id": "zoo@0.0.7",
+  "dist": {
+    "shasum": "c3660cfc971b9963cf6afcc232f3ba2cd89a1156"
+  },
+  "_resolved": "https://registry.npmjs.org/zoo/-/zoo-0.0.7.tgz"
+}
