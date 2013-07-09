@@ -32,7 +32,7 @@ var config = {
 	'Lessing':			false,
 	'modulecompiler':	false,
 	'minify':			false,
-	'output':		false
+	'output':			false
 };
 
 program
@@ -134,7 +134,6 @@ if(config.init){
 		getTemFile();
 	}
 } else if (config.modulecompiler) {
-	log(config.output);
 	mojoCompiler(false,config.output?config.output:'combo.js');
 } else if (config.Lessing) {
     lessing(process.env.PWD || process.cwd(), function(){});
