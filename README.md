@@ -1,6 +1,8 @@
 
 ## Zoo
 
+	npm install zoo
+
 重要提示：少用工具，多用grunt
 
 Zoo 工具，安装后，执行
