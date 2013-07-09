@@ -251,6 +251,8 @@ function moduleCompilerOneDir(dir,output){
 			}]
 		});
 		kmc.build(config['modulecompiler'], output, 'utf-8');
+		log(green('合并后文件为: '+output));
+
 	}
 
 	if(fs.existsSync(process.env.PWD + slash + 'combo.js')){
